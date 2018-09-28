@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IBloodRepo, IStockUpdateData } from '../dataModels/bloodReository';
 import { receiversList } from '../constans/boodReceiver.const';
+import { ReceiverComponent } from './receiver/receiver.component';
 interface IEachBloodCount {
   name: string
   count: number
@@ -59,7 +60,7 @@ export class BloodDataComponent implements OnInit {
   private stockUpdateGroup: string = '';
   private stockUpdateCount: string = '0';
   private requredBloodGroup: string = '';
-  private requiredBlood: string = '0';
+  private requiredBlood: number|null; ;
   private bloodDonar = {};
   constructor() { }
   ngOnInit() {
@@ -70,6 +71,8 @@ export class BloodDataComponent implements OnInit {
         this.getCount()
       } else {
         this.currentSockInBank[this.stockUpdateGroup]['currentStock'] = this.stockUpdateCount;
+        // this.stockUpdateGroup = '';
+        // this.stockUpdateCount = '0';
       }
     }
   }
@@ -82,43 +85,40 @@ export class BloodDataComponent implements OnInit {
   private showUpdateStockForm(): void {
     this.shouldUpdateStockorCalculateUnit = true;
   }
-  checkAvailability(bloodGroup): void{
-     console.log(bloodGroup);
-     let requiredGroups;
-     for(let key in this.currentSockInBank){
-         if(key === bloodGroup){
+  checkAvailability(bloodGroup): void {
+    this.bloodDonar = {};
+    if (this.requiredBlood == 0 || this.requiredBlood == null) {
+      return;
+    }
+    else {
+      let requiredGroups = [];
+      for (let key in this.currentSockInBank) {
+        if (key === bloodGroup) {
           requiredGroups = this.currentSockInBank[bloodGroup]["canReceiveFrom"];
           break;
-         }
-     }
-     for(let key in this.currentSockInBank){
-       for(let i = 0; i < requiredGroups.length; i++){
-         if(key === requiredGroups[i] && this.currentSockInBank[key]["currentStock"] >= this.requiredBlood){
-          this.bloodDonar[key] = this.currentSockInBank[key];
-         }
-       }
+        }
+      }
+      for (let key in this.currentSockInBank) {
+        for (let i = 0; i < requiredGroups.length; i++) {
+          if (key === requiredGroups[i] && this.currentSockInBank[key]["currentStock"] >= this.requiredBlood) {
+            this.bloodDonar[key] = this.currentSockInBank[key];
+          }
+        }
+      }
     }
-    console.log(this.bloodDonar);
   }
 
-  private allowDrop(event: Event): void {
-    event.preventDefault(); 
-}
 
-onDrop(dropData: any): void {
-  //dropData.preventDefault();
-  //this.dropOverActive = false;
-  let droppedData = dropData;
-  //debugger;
-  let sourceFile = JSON.parse(dropData.dataTransfer.getData("file"));
-  
-}
 
-private allowdrag(event: DragEvent, grpname: any): void {
-  event.dataTransfer.setData("donar",JSON.stringify(grpname));
-  //debugger;
-   //event.preventDefault();
-}
+  private allowdrag(event: DragEvent, grpname: any): void {
+    event.dataTransfer.setData("donar", JSON.stringify(grpname));
+    //debugger;
+    //event.preventDefault();
+  }
+
+  updateBloodRepo(event){
+    this.currentSockInBank[this.requredBloodGroup]['currentStock'] = event['currentStock'] - this.requiredBlood;
+  }
 
 
 

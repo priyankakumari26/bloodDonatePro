@@ -1,7 +1,7 @@
 <div>
     <div class="update-stockForm" *ngIf="!shouldUpdateStockorCalculateUnit">
-        <button  (click)="showUpdateStockForm()">Update Stock Now</button>
-        <button  (click)="updateStockorCalculate(true)">Calculate Units</button>
+        <button (click)="showUpdateStockForm()">Update Stock Now</button>
+        <button (click)="updateStockorCalculate(true)">Calculate Units</button>
     </div>
     <div class="update-stockForm" *ngIf="shouldUpdateStockorCalculateUnit">
         <select [(ngModel)]="stockUpdateGroup">
@@ -12,7 +12,8 @@
         <button class="update-btn" (click)="updateStockorCalculate(false)">update Stock</button>
         <button class="update-btn" (click)="closeForm()">Close</button>
     </div>
-    <div *ngFor="let group of allGroups" class="group-drawer" draggable="true"  (dragstart)="allowdrag($event,group)" [ngClass]="{'selected_group': bloodDonar.hasOwnProperty(group) && currentSockInBank[group].displayName ===  bloodDonar[group].displayName}">
+    <div *ngFor="let group of allGroups" class="group-drawer" draggable="true" (dragstart)="allowdrag($event,currentSockInBank[group])"
+        [ngClass]="{'selected_group': bloodDonar.hasOwnProperty(group) && currentSockInBank[group].currentStock ===  bloodDonar[group].currentStock}">
         <div class="display-name">{{currentSockInBank[group].displayName}}</div>
         <div class="display-count">{{currentSockInBank[group].currentStock}}</div>
     </div>
@@ -20,12 +21,8 @@
 <div>
     <select [(ngModel)]="requredBloodGroup" (change)="checkAvailability(requredBloodGroup)">
         <option value="">Select Blood Group</option>
-        <option *ngFor="let group of allGroups" [ngValue]="group" >{{currentSockInBank[group].displayName}}</option>
+        <option *ngFor="let group of allGroups" [ngValue]="group">{{currentSockInBank[group].displayName}}</option>
     </select>
-    <input type="number" [(ngModel)]="requiredBlood">
+    <input type="number" [(ngModel)]="requiredBlood" (keyup)="checkAvailability(requredBloodGroup)">
 </div>
-
-<div class="group-drawer" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
-    <!-- <div class="display-name">{{currentSockInBank[group].displayName}}</div>
-    <div class="display-count">{{currentSockInBank[group].currentStock}}</div> -->
-</div>
+<app-receiver (change)="updateBloodRepo($event)" [requiredBottle]="requiredBlood"></app-receiver>
