@@ -1,15 +1,33 @@
 
 
 .group-drawer {
-    width: 25vw;
+    width: 5vw;
     display: inline-block;
-    border: 1px solid #ff6ad1;
+    //border: 1px solid #65b7b9;
+    background-color: #bbf7f8;
     margin: 10px;
-    height: 100px;
+    height: 70px;
     padding: 10px;
     .display-name{
         display: inline-block;
-        width: 70%;
+        width: 50%;
+    }
+    .display-count{
+        display: inline-block;
+        width: 20%;
+    }
+}
+.selected_group {
+    width: 5vw;
+    display: inline-block;
+    //border: 1px solid #65b7b9;
+    background-color: #289fa1;
+    margin: 10px;
+    height: 70px;
+    padding: 10px;
+    .display-name{
+        display: inline-block;
+        width: 50%;
     }
     .display-count{
         display: inline-block;

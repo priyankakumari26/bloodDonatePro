@@ -12,8 +12,20 @@
         <button class="update-btn" (click)="updateStockorCalculate(false)">update Stock</button>
         <button class="update-btn" (click)="closeForm()">Close</button>
     </div>
-    <div *ngFor="let group of allGroups" class="group-drawer">
+    <div *ngFor="let group of allGroups" class="group-drawer" draggable="true"  (dragstart)="allowdrag($event,group)" [ngClass]="{'selected_group': bloodDonar.hasOwnProperty(group) && currentSockInBank[group].displayName ===  bloodDonar[group].displayName}">
         <div class="display-name">{{currentSockInBank[group].displayName}}</div>
         <div class="display-count">{{currentSockInBank[group].currentStock}}</div>
     </div>
+</div>
+<div>
+    <select [(ngModel)]="requredBloodGroup" (change)="checkAvailability(requredBloodGroup)">
+        <option value="">Select Blood Group</option>
+        <option *ngFor="let group of allGroups" [ngValue]="group" >{{currentSockInBank[group].displayName}}</option>
+    </select>
+    <input type="number" [(ngModel)]="requiredBlood">
+</div>
+
+<div class="group-drawer" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
+    <!-- <div class="display-name">{{currentSockInBank[group].displayName}}</div>
+    <div class="display-count">{{currentSockInBank[group].currentStock}}</div> -->
 </div>
